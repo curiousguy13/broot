@@ -104,8 +104,9 @@ class Root:
 
     def _get_mounted(self):
         mount_points = []
-
+        
         mount_output = check_output(["mount"]).strip()
+        mount_output = mount_output.decode('utf-8')
         for mounted in mount_output.split("\n"):
             mount_points.append(mounted.split(" ")[2])
 
