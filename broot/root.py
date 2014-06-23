@@ -266,7 +266,7 @@ class Root:
 
     def get_arch(self):
         arch = check_output(["uname", "-m"]).strip()
-
+        arch = arch.decode('utf-8')
         if arch == "i686":
             arch = "i386"
 
