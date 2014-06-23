@@ -150,7 +150,7 @@ class Root:
                     try:
                         print("Killing %s" % pid)
                         os.kill(int(pid), signal.SIGTERM)
-                    except OSError, e:
+                    except OSError as e:
                         print("Failed: %s" % e)
 
     def deactivate(self):
