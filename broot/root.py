@@ -269,7 +269,7 @@ class Root:
         if arch == "i686":
             arch = "i386"
 
-        return arc
+        return arch
 
     def _download(self):
         prebuilt_name = self._config["prebuilt"]["name"]
