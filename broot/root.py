@@ -280,7 +280,7 @@ class Root:
                                      prebuilt_name)
 
         try:
-            last = urllib.urlopen(last_url).read().strip()
+            last = urlopen(last_url).read().strip()
         except:
             print("Failed to download %s" % last_url)
             raise
