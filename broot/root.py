@@ -281,6 +281,7 @@ class Root:
 
         try:
             last = urllib.request.urlopen(last_url).read().strip()
+            last = last.decode('utf-8')
         except:
             print("Failed to download %s" % last_url)
             raise
