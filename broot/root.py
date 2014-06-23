@@ -20,7 +20,7 @@ import json
 import os
 import signal
 import shutil
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from subprocess import check_call, call, check_output
 
 import wget
