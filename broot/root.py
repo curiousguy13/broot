@@ -268,7 +268,7 @@ class Root:
         if arch == "i686":
             arch = "i386"
 
-        return arch
+        return arc
 
     def _download(self):
         prebuilt_name = self._config["prebuilt"]["name"]
@@ -280,7 +280,7 @@ class Root:
         try:
             last = urllib2.urlopen(last_url).read().strip()
         except:
-            print "Failed to download %s" % last_url
+            print("Failed to download %s" % last_url)
             raise
 
         try:
