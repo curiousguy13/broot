@@ -280,7 +280,6 @@ class Root:
                                      prebuilt_name)
 
         try:
-            print("last_url=",last_url)
             last = urllib.request.urlopen(last_url).read().strip()
         except:
             print("Failed to download %s" % last_url)
@@ -292,7 +291,8 @@ class Root:
             pass
 
         os.chdir(self._var_dir)
-
+        print(prebuilt_url)
+        print(last)
         tar_filename = wget.download(prebuilt_url + last)
         if tar_filename is None:
             return False
