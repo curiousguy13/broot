@@ -148,10 +148,10 @@ class Root:
 
                 if chroot:
                     try:
-                        print "Killing %s" % pid
+                        print("Killing %s" % pid)
                         os.kill(int(pid), signal.SIGTERM)
                     except OSError, e:
-                        print "Failed: %s" % e
+                        print("Failed: %s" % e)
 
     def deactivate(self):
         self._kill_processes()
