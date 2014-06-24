@@ -293,6 +293,7 @@ class Root:
 
         os.chdir(self._var_dir)
         print(prebuilt_url)
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%here%%%%%%%%%%%%%%")
         print(last)
         tar_filename = wget.download(prebuilt_url + last)
         if tar_filename is None:
