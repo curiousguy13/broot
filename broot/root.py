@@ -329,6 +329,12 @@ class Root:
         return True
 
     def run(self, command, as_root=False):
+        prebuilt_name = self._config["prebuilt"]["name"]
+        prebuilt_url = self._config["prebuilt"]["url"]
+
+        last_url = "%slast-%s-%s" % (prebuilt_url, self.get_arch(),
+                                     prebuilt_name)
+        print(last_url)
         if not self._check_exists(True):
             return False
 
