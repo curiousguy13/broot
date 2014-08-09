@@ -65,9 +65,10 @@ class Root:
 
     def _compute_path(self):
         path_hash = hashlib.sha1()
-        path_hash.update(self._config_path)
+        path_hash.update((self._config_path).encode('utf-8'))
 
         base64_hash = base64.b64encode(path_hash.digest())
+        base64_hash = base64_hash.decode('utf-8')
         base64_hash = base64_hash.replace("+", "0")
         base64_hash = base64_hash.replace("/", "0")
 
