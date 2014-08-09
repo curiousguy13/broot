@@ -20,7 +20,7 @@ import json
 import os
 import signal
 import shutil
-import urllib.request, urllib.error, urllib.parse
+import urllib2
 from subprocess import check_call, call, check_output
 
 import wget
@@ -61,10 +61,9 @@ class Root:
 
     def _compute_path(self):
         path_hash = hashlib.sha1()
-        path_hash.update((self._config_path).encode('utf-8'))
+        path_hash.update(self._config_path)
 
         base64_hash = base64.b64encode(path_hash.digest())
-        base64_hash = base64_hash.decode('utf-8')
         base64_hash = base64_hash.replace("+", "0")
         base64_hash = base64_hash.replace("/", "0")
 
@@ -78,7 +77,7 @@ class Root:
     def _compute_mounts(self):
         mounts = collections.OrderedDict()
 
-        for source_path, dest_path in list(self._get_user_mounts().items()):
+        for source_path, dest_path in self._get_user_mounts().items():
             full_dest_path = os.path.join(self.path, dest_path)
             mounts[os.path.abspath(source_path)] = full_dest_path
 
@@ -106,7 +105,6 @@ class Root:
         mount_points = []
 
         mount_output = check_output(["mount"]).strip()
-        mount_output = mount_output.decode('utf-8')
         for mounted in mount_output.split("\n"):
             mount_points.append(mounted.split(" ")[2])
 
@@ -118,7 +116,7 @@ class Root:
 
         mounted = self._get_mounted()
 
-        for source_path, dest_path in list(self._mounts.items()):
+        for source_path, dest_path in self._mounts.items():
             if dest_path not in mounted:
                 if os.path.exists(dest_path):
                     check_call(["mount", "--bind", source_path, dest_path])
@@ -150,16 +148,16 @@ class Root:
 
                 if chroot:
                     try:
-                        print("Killing %s" % pid)
+                        print "Killing %s" % pid
                         os.kill(int(pid), signal.SIGTERM)
-                    except OSError as e:
-                        print("Failed: %s" % e)
+                    except OSError, e:
+                        print "Failed: %s" % e
 
     def deactivate(self):
         self._kill_processes()
 
         mounted = self._get_mounted()
-        for mount_path in reversed(list(self._mounts.values())):
+        for mount_path in reversed(self._mounts.values()):
             if mount_path in mounted:
                 check_call(["umount", mount_path])
 
@@ -179,7 +177,7 @@ class Root:
         self._builder.update_packages()
 
         flat_packages = []
-        for group in list(self._config["packages"].values()):
+        for group in self._config["packages"].values():
             for package in group:
                 if package not in flat_packages:
                     flat_packages.append(package)
@@ -266,7 +264,7 @@ class Root:
 
     def get_arch(self):
         arch = check_output(["uname", "-m"]).strip()
-        arch = arch.decode('utf-8')
+
         if arch == "i686":
             arch = "i386"
 
@@ -280,10 +278,9 @@ class Root:
                                      prebuilt_name)
 
         try:
-            last = urllib.request.urlopen(last_url).read().strip()
-            last = last.decode('utf-8')
+            last = urllib2.urlopen(last_url).read().strip()
         except:
-            print("Failed to download %s" % last_url)
+            print "Failed to download %s" % last_url
             raise
 
         try:
@@ -292,9 +289,7 @@ class Root:
             pass
 
         os.chdir(self._var_dir)
-        print(prebuilt_url)
-        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%here%%%%%%%%%%%%%%")
-        print(last)
+
         tar_filename = wget.download(prebuilt_url + last)
         if tar_filename is None:
             return False
@@ -309,7 +304,7 @@ class Root:
 
         os.unlink(tar_filename)
 
-        print("")
+        print ""
 
         if result != 0:
             return False
@@ -329,12 +324,6 @@ class Root:
         return True
 
     def run(self, command, as_root=False):
-        prebuilt_name = self._config["prebuilt"]["name"]
-        prebuilt_url = self._config["prebuilt"]["url"]
-
-        last_url = "%slast-%s-%s" % (prebuilt_url, self.get_arch(),
-                                     prebuilt_name)
-        print("%poopy%",last_url)
         if not self._check_exists(True):
             return False
 
@@ -368,7 +357,7 @@ class Root:
                     env[name] = os.environ[name]
 
             env_string = ""
-            for name, value in list(env.items()):
+            for name, value in env.items():
                 env_string += "%s=%s " % (name, value)
 
             result = call("%s %s /usr/bin/env -i %s /bin/bash -lc \"%s\"" %
@@ -431,7 +420,7 @@ class Root:
             to_chown.append(bashrc_path)
 
         try:
-            for path in list(self._get_user_mounts().values()):
+            for path in self._get_user_mounts().values():
                 full_path = os.path.join(self.path, path)
                 os.makedirs(full_path)
                 to_chown.append(full_path)

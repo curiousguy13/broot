@@ -16,7 +16,7 @@
 import os
 import shutil
 import tempfile
-import urllib.request, urllib.error, urllib.parse
+import urllib2
 from subprocess import check_call
 
 
@@ -85,7 +85,7 @@ class FedoraBuilder:
 
         temp_dir = tempfile.mkdtemp()
 
-        url_f = urllib.request.urlopen(release_rpm)
+        url_f = urllib2.urlopen(release_rpm)
         rpm_path = os.path.join(temp_dir, "fedora-release.noarch.rpm")
         with open(rpm_path, "w") as f:
             f.write(url_f.read())
