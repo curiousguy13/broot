@@ -1,3 +1,7 @@
+from __future__ import print_function
+from __future__ import print_function
+from __future__ import print_function
+from __future__ import print_function
 # Copyright 2013 Daniel Narvaez
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -148,10 +152,10 @@ class Root:
 
                 if chroot:
                     try:
-                        print "Killing %s" % pid
+                        print("Killing %s" % pid)
                         os.kill(int(pid), signal.SIGTERM)
-                    except OSError, e:
-                        print "Failed: %s" % e
+                    except OSError as e:
+                        print("Failed: %s" % e)
 
     def deactivate(self):
         self._kill_processes()
@@ -280,7 +284,7 @@ class Root:
         try:
             last = urllib2.urlopen(last_url).read().strip()
         except:
-            print "Failed to download %s" % last_url
+            print("Failed to download %s" % last_url)
             raise
 
         try:
@@ -304,7 +308,7 @@ class Root:
 
         os.unlink(tar_filename)
 
-        print ""
+        print("")
 
         if result != 0:
             return False
