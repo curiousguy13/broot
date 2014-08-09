@@ -24,7 +24,7 @@ import json
 import os
 import signal
 import shutil
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from subprocess import check_call, call, check_output
 
 import wget
@@ -282,7 +282,7 @@ class Root:
                                      prebuilt_name)
 
         try:
-            last = urllib2.urlopen(last_url).read().strip()
+            last = urllib.request.urlopen(last_url).read().strip()
         except:
             print("Failed to download %s" % last_url)
             raise
