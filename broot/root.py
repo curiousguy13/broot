@@ -1,7 +1,3 @@
-from __future__ import print_function
-from __future__ import print_function
-from __future__ import print_function
-from __future__ import print_function
 # Copyright 2013 Daniel Narvaez
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -82,7 +78,7 @@ class Root:
     def _compute_mounts(self):
         mounts = collections.OrderedDict()
 
-        for source_path, dest_path in self._get_user_mounts().items():
+        for source_path, dest_path in list(self._get_user_mounts().items()):
             full_dest_path = os.path.join(self.path, dest_path)
             mounts[os.path.abspath(source_path)] = full_dest_path
 
@@ -113,7 +109,7 @@ class Root:
         mount_output = mount_output.decode('utf-8')
         for mounted in mount_output.split("\n"):
             mount_points.append(mounted.split(" ")[2])
-	
+
         return mount_points
 
     def activate(self):
@@ -122,7 +118,7 @@ class Root:
 
         mounted = self._get_mounted()
 
-        for source_path, dest_path in self._mounts.items():
+        for source_path, dest_path in list(self._mounts.items()):
             if dest_path not in mounted:
                 if os.path.exists(dest_path):
                     check_call(["mount", "--bind", source_path, dest_path])
@@ -163,7 +159,7 @@ class Root:
         self._kill_processes()
 
         mounted = self._get_mounted()
-        for mount_path in reversed(self._mounts.values()):
+        for mount_path in reversed(list(self._mounts.values())):
             if mount_path in mounted:
                 check_call(["umount", mount_path])
 
@@ -183,7 +179,7 @@ class Root:
         self._builder.update_packages()
 
         flat_packages = []
-        for group in self._config["packages"].values():
+        for group in list(self._config["packages"].values()):
             for package in group:
                 if package not in flat_packages:
                     flat_packages.append(package)
@@ -270,7 +266,7 @@ class Root:
 
     def get_arch(self):
         arch = check_output(["uname", "-m"]).strip()
-
+        arch = arch.decode('utf-8')
         if arch == "i686":
             arch = "i386"
 
@@ -285,6 +281,7 @@ class Root:
 
         try:
             last = urllib.request.urlopen(last_url).read().strip()
+            last = last.decode('utf-8')
         except:
             print("Failed to download %s" % last_url)
             raise
@@ -295,7 +292,9 @@ class Root:
             pass
 
         os.chdir(self._var_dir)
-
+        print(prebuilt_url)
+        print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%here%%%%%%%%%%%%%%")
+        print(last)
         tar_filename = wget.download(prebuilt_url + last)
         if tar_filename is None:
             return False
@@ -330,6 +329,12 @@ class Root:
         return True
 
     def run(self, command, as_root=False):
+        prebuilt_name = self._config["prebuilt"]["name"]
+        prebuilt_url = self._config["prebuilt"]["url"]
+
+        last_url = "%slast-%s-%s" % (prebuilt_url, self.get_arch(),
+                                     prebuilt_name)
+        print("%poopy%",last_url)
         if not self._check_exists(True):
             return False
 
@@ -363,7 +368,7 @@ class Root:
                     env[name] = os.environ[name]
 
             env_string = ""
-            for name, value in env.items():
+            for name, value in list(env.items()):
                 env_string += "%s=%s " % (name, value)
 
             result = call("%s %s /usr/bin/env -i %s /bin/bash -lc \"%s\"" %
@@ -426,7 +431,7 @@ class Root:
             to_chown.append(bashrc_path)
 
         try:
-            for path in self._get_user_mounts().values():
+            for path in list(self._get_user_mounts().values()):
                 full_path = os.path.join(self.path, path)
                 os.makedirs(full_path)
                 to_chown.append(full_path)
