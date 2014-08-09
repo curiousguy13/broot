@@ -334,7 +334,7 @@ class Root:
 
         last_url = "%slast-%s-%s" % (prebuilt_url, self.get_arch(),
                                      prebuilt_name)
-        print(last_url)
+        print("%poopy%",last_url)
         if not self._check_exists(True):
             return False
 
