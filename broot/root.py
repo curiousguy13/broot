@@ -114,7 +114,7 @@ class Root:
         for mounted in mount_output.split("\n"):
             mount_points.append(mounted.split(" ")[2])
 	
-        return mount_pounts
+        return mount_points
 
     def activate(self):
         if not self._check_exists(True):
