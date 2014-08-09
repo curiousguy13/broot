@@ -110,10 +110,11 @@ class Root:
         mount_points = []
 
         mount_output = check_output(["mount"]).strip()
+        mount_output = mount_output.decode('utf-8')
         for mounted in mount_output.split("\n"):
             mount_points.append(mounted.split(" ")[2])
-
-        return mount_points
+	
+        return mount_pounts
 
     def activate(self):
         if not self._check_exists(True):
